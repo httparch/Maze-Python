@@ -1,0 +1,32 @@
+#control-panel {
+  margin-top: 20px;
+}
+
+#button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#button-container button {
+  padding: 10px;
+  font-size: 14px;
+}
+
+#terminal {
+  width: 100%;
+  margin-bottom: 10px;
+  }
+  #enterButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  }
+
+#output {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+  height: 200px;
+  overflow-y: auto;
+}
