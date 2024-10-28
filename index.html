@@ -34,18 +34,43 @@
     </div>
 
     <div id="view">
+
       <div id="mazeContainer">
         <canvas id="mazeCanvas" class="border" height="1100" width="1100"></canvas>
       </div>
       <div id="terminalContainer">
-          <textarea id="terminal" rows="10" cols="50" placeholder="Type your commands here..."></textarea>
-          <button id="enterButton">Execute</button>
-          <div id="output"></div>
+        <div class="terminal-output-wrapper">
+          <div class="terminal-wrapper">
+            <textarea id="terminal" rows="10" cols="50" placeholder="Type your commands here..."></textarea>
+          </div>
+          <div id="output" class="output-container">
+            <h3>Output:</h3>
+            <div id="outputContent"></div>
+          </div>
         </div>
+        <button id="enterButton">Execute</button>
       </div>
     </div>
 
   </div>
+
+  <audio id="bgMusic1" loop>
+    <source src="sound/bg1.wav" type="audio/wav">
+  </audio>
+  <audio id="bgMusic2" loop>
+    <source src="sound/bg2.mp3" type="audio/mpeg">
+  </audio>
+  <button id="musicToggle" style="position: fixed; bottom: 20px; right: 20px;">
+    <span id="musicIcon">🔊</span>
+  </button>
+
+  <audio id="winSound">
+    <source src="sound/win.wav" type="audio/wav">
+  </audio>
+
+  <audio id="hopSound">
+    <source src="sound/hop.wav" type="audio/wav">
+  </audio>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 html, body {
     width: 100vw;
@@ -10,125 +11,8 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #fff;
+    background-color: #e8f5e9; /* Light green background */
     font-family: 'Poppins', sans-serif;
-}
-
-#view {
-    margin-top: 30px;
-}
-
-#mazeContainer {
-    top: 15px;
-    opacity: 0;
-    display: inline-block;
-    margin: auto;
-    border-radius: 10px;
-}
-#mazeContainer #mazeCanvas {
-    margin: 0;
-    display: block;
-    border: solid 2px black;
-    height: 400px;
-}
-input, select {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.30);
-    height: 45px;
-    width: 150px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    display: inline-block;
-    font-size: 15px;
-    text-align: center;
-    text-decoration: none;
-    appearance: none;
-}
-input:hover, select:hover {
-	background-color: rgba(0, 0, 0, 0.70);
-}
-input:active, select:active {
-	background-color: black;
-}
-input:focus, select:focus {
-	outline: none;
-}
-.custom-select {
-	display: inline-block;
-}
-.custom-select select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-repeat: no-repeat;
-    background-position: 125px center;
-}
-#Message-Container {
-    visibility: hidden;
-    color: white;
-    display: block;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.30);
-    z-index: 1;
-}
-#Message-Container #message {
-    width: 300px;
-    height: 300px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-left: -150px;
-    margin-top: -150px;
-}
-#page {
-	text-align: center;
-	height: auto;
-	width: auto;
-	margin: auto;
-}
-#page #menu {
-    margin: auto;
-    padding: 10px;
-    height: 65px;
-    box-sizing: border-box;
-}
-#page #menu h1 {
-    margin: 0;
-    margin-bottom: 10px;
-    font-weight: 600;
-    font-size: 3.2rem;
-}
-#page #view {
-    position: absolute;
-    top: 65px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: auto;
-}
-.border {
-    border: 10px black solid;
-    border-radius: 10px;
-}
-
-#instructions {
-    margin-top: 425px;
-}
- 
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 400px) {
-	input, select {
-	    width: 120px;
-	}
 }
 
 #view {
@@ -138,36 +22,327 @@ input:focus, select:focus {
 }
 
 #mazeContainer {
+    top: 15px;
+    /* Remove or set opacity to 1 */
+    opacity: 1; /* Changed from 0 */
+    display: inline-block;
+    margin: auto;
+    border-radius: 10px;
     flex: 0; /* Take up available space */
     margin-right: 150px; /* Space between maze and terminal */
 }
 
+#mazeContainer #mazeCanvas {
+    margin: 0;
+    display: block;
+    border: solid 4px #2e7d32; /* Darker green border */
+    height: 400px;
+    background-image: url('data:image/png;base64,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');
+    background-color: #81c784; /* Light green background */
+}
+
+/* Separate styles for input and select */
+input {
+    cursor: pointer;
+    background-color: #2e7d32; /* Green */
+    height: 45px;
+    width: 150px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    display: inline-block;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: none;
+    appearance: none;
+    font-family: 'Press Start 2P', cursive;
+}
+
+select {
+    cursor: pointer;
+    background-color: #FFC0CB; /* Baby pink */
+    height: 45px;
+    width: 150px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: rgb(76, 18, 18);
+    display: inline-block;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: none;
+    appearance: none;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Separate hover states */
+input:hover {
+    background-color: #1b5e20; /* Darker green */
+}
+
+select:hover {
+    background-color: #FFB6C1; /* Slightly darker baby pink */
+}
+
+/* Separate active states */
+input:active {
+    background-color: #0d3311; /* Even darker green */
+}
+
+select:active {
+    background-color: #FF69B4; /* Even darker pink */
+}
+
+/* Remove focus outline for both */
+input:focus, select:focus {
+    outline: none;
+}
+
+.custom-select {
+    display: inline-block;
+}
+
+.custom-select select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: 125px center;
+}
+
+#Message-Container {
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#Message-Container #message {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    max-width: 80%;
+    width: 400px;
+}
+
+#Message-Container #message h1 {
+    color: #2e7d32;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#Message-Container #message p {
+    font-size: 14px;
+    margin: 15px 0;
+    color: #333;
+}
+
+#page {
+    text-align: center;
+    height: auto;
+    width: auto;
+    margin: auto;
+}
+
+#page #menu {
+    margin: auto;
+    padding: 10px;
+    height: 65px;
+    box-sizing: border-box;
+}
+
+#page #menu h1 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 3.2rem;
+}
+
+#page #view {
+    position: absolute;
+    top: 65px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+}
+
+.border {
+    border: 10px #2e7d32 solid; /* Darker green border */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#instructions {
+    margin-top: 425px;
+}
+
 #terminalContainer {
-    width: 300px; /* Fixed width for terminal */
-    flex: 0.85; /* Take up available space */
-    margin-right: 100px; /* Space between maze and terminal */
+    width: 600px;
+    flex: 0.85;
+    margin-right: 100px;
+    display: flex; /* Use flexbox to place items side by side */
+    flex-direction: column; /* Stack children vertically */
+}
+
+.terminal-output-wrapper {
+    display: flex; /* Side by side containers */
+    gap: 20px; /* Space between terminal and output */
+}
+
+.terminal-wrapper {
+    flex: 1;
 }
 
 #terminal {
-    height: 350px;
+    margin-top: 28px;
+    height: 320px;
     width: 100%;
     padding: 10px;
-    border: solid 2px black;
+    border: solid 2px #2e7d32;
     border-radius: 5px;
     resize: none;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px; /* Adjusted for pixel font readability */
+    line-height: 1.6; /* Better spacing for pixel font */
+    background-color: #f1f8e9;
+}
+
+.output-container {
+    flex: 1;
+    margin-top: 28px;
+    height: 320px;
+    border: solid 2px #2e7d32;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f1f8e9;
+}
+
+.output-container h3 {
+    margin-top: 0;
+    color: #2e7d32;
+    border-bottom: 1px solid #2e7d32;
+    padding-bottom: 5px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+}
+
+#outputContent {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+#enterButton {
+    width: 100%; /* Take full width of terminalContainer */
+    margin-top: 10px;
 }
 
 button {
-    margin: 5px;
+    margin: 0px;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.30);
+    background-color: #2e7d32;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
 }
 
 button:hover {
-    background-color: rgba(0, 0, 0, 0.70);
+    background-color: #1b5e20; /* Even darker green */
 }
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 400px) {
+    input, select {
+        width: 120px;
+    }
+}
+
+#musicToggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#musicToggle:hover {
+    background-color: #1b5e20;
+}
+
+.victory-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.victory-buttons button {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 15px 20px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.victory-buttons button:hover {
+    background-color: #1b5e20;
+}
+
+.play-again-btn {
+    background-color: #2e7d32 !important;
+}
+
+.close-btn {
+    background-color: #666 !important;
+}
+
+.close-btn:hover {
+    background-color: #444 !important;
+}
+
+#scoreDisplay {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: #2e7d32;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #2e7d32;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+

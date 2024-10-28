@@ -11,14 +11,39 @@ function shuffle(a) {
 }
 
 function displayVictoryMess(moves) {
-  document.getElementById("moves").innerHTML = "You Moved " + moves + " Steps.";
-  toggleVisibility("Message-Container");
-  document.getElementById("message").innerHTML = "Congratulations! You've reached the end of the maze!";
+    console.log('Displaying victory message with moves:', moves);
+    
+    // Play win sound
+    const winSound = document.getElementById('winSound');
+    winSound.currentTime = 0;
+    winSound.play().catch(error => {
+        console.log("Error playing win sound:", error);
+    });
+
+    // Get difficulty and score
+    const difficulty = document.getElementById("diffSelect").value;
+    const score = calculateScore(difficulty);
+    
+    // Update victory message
+    document.getElementById("message").innerHTML = `
+        <h1>Congratulations!</h1>
+        <p>You've completed the maze!</p>
+        <p>Steps taken: ${moves}</p>
+        <p>Difficulty: ${getDifficultyName(difficulty)}</p>
+        <p>Score: ${score}</p>
+        <div class="victory-buttons">
+            <button onclick="makeMaze()" class="play-again-btn">Play Again</button>
+            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button>
+        </div>
+    `;
+    
+    // Show message container
+    document.getElementById("Message-Container").style.visibility = "visible";
 }
 
 function toggleVisibility(id) {
-  const element = document.getElementById(id);
-  element.style.visibility = (element.style.visibility === "visible") ? "hidden" : "visible";
+    var element = document.getElementById(id);
+    element.style.visibility = (element.style.visibility === "visible") ? "hidden" : "visible";
 }
 
 function Maze(Width, Height) {
@@ -129,8 +154,9 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
         var cellX = x * cellSize;
         var cellY = y * cellSize;
 
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = cellSize / 40;
+        // Update wall color to dark green
+        ctx.strokeStyle = "#1b5e20"; // Dark green
+        ctx.lineWidth = cellSize / 20; // Make walls thicker
 
         if (!cell.n) {
             ctx.beginPath();
@@ -157,14 +183,11 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
             ctx.stroke();
         }
 
-        // Optionally, you can keep the cell coordinates for debugging
-        // If you want to remove these as well, comment out or remove the next 3 lines
-        //ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-        //ctx.font = "8px Arial";
-        //ctx.fillText(`(${x},${y})`, cellX + 2, cellY + 10);
-
-        // Remove the line that displays true/false values
-        // ctx.fillText(`n:${cell.n},s:${cell.s},e:${cell.e},w:${cell.w}`, cellX + 2, cellY + 20);
+        // Add a subtle shadow effect to the walls
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
     }
 
     function drawMap() {
@@ -250,6 +273,9 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
     y: maze.startCoord().y
   };
 
+  this.moves = 0; // Initialize moves counter
+  this.onComplete = onComplete; // Store the victory callback
+
   this.redrawPlayer = function (_cellsize) {
     cellSize = _cellsize;
     drawSprite(this.cellCoords);
@@ -299,6 +325,7 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
     let newX = this.cellCoords.x;
     let newY = this.cellCoords.y;
     let currentCell = map[this.cellCoords.y][this.cellCoords.x];
+    const hopSound = document.getElementById('hopSound');
 
     console.log(`Current cell (${this.cellCoords.x},${this.cellCoords.y}):`, currentCell);
 
@@ -326,13 +353,27 @@ function Player(maze, c, _cellsize, onComplete, sprite = null) {
     console.log(`Attempted new position: (${newX}, ${newY})`);
 
     if (canMove && newX >= 0 && newY >= 0 && newX < map[0].length && newY < map.length) {
+        // Play hop sound when movement is successful
+        hopSound.currentTime = 0;
+        hopSound.play().catch(error => {
+            console.log("Error playing hop sound:", error);
+        });
+        
         this.cellCoords = { x: newX, y: newY };
-        console.log(`Moved to (${this.cellCoords.x}, ${this.cellCoords.y})`);
-        moves++;
+        this.moves = (this.moves || 0) + 1; // Ensure moves is initialized
+        console.log('Current moves:', this.moves);
+        
+        // Update score display with fixed score
+        const difficulty = document.getElementById("diffSelect").value;
+        const score = calculateScore(difficulty);
+        updateScoreDisplay(score);
+        
+        // Check if player reached the end
         if (this.cellCoords.x === maze.endCoord().x && this.cellCoords.y === maze.endCoord().y) {
-            onComplete(moves);
-            this.unbindKeyDown();
+            console.log('Maze completed!');
+            this.onComplete(this.moves);
         }
+        
         return true;
     } else {
         console.log(`Cannot move ${direction} (wall or out of bounds)`);
@@ -378,6 +419,42 @@ var finishSprite;
 var maze, draw, player;
 var cellSize;
 var difficulty;
+
+// Add these variables at the top with your other global variables
+let currentScore = 0;
+const DIFFICULTY_SCORES = {
+    '10': 100,  // Easy: 100 points
+    '15': 250,  // Medium: 250 points
+    '25': 500,  // Hard: 500 points
+    '38': 1000  // Extreme: 1000 points
+};
+
+// Simplified score calculation
+function calculateScore(difficulty) {
+    return DIFFICULTY_SCORES[difficulty];
+}
+
+// Update the score display function with verification
+function updateScoreDisplay(score) {
+    /*console.log('Updating score display with:', score);
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    if (scoreDisplay) {
+        scoreDisplay.textContent = `Score: ${score}`;
+    } else {
+        console.error('Score display element not found');
+    }*/
+}
+
+// Helper function to get difficulty name
+function getDifficultyName(difficulty) {
+    switch(difficulty) {
+        case '10': return 'Easy';
+        case '15': return 'Medium';
+        case '25': return 'Hard';
+        case '38': return 'Extreme';
+        default: return 'Unknown';
+    }
+}
 
 window.onload = function () {
   let viewWidth = $("#view").width();
@@ -473,6 +550,9 @@ window.onresize = function () {
 }
 
 function makeMaze() {
+    // Reset score at the start of new maze
+    updateScoreDisplay(0);
+    
     if (player) {
         player.unbindKeyDown();
         player = null;
@@ -484,7 +564,9 @@ function makeMaze() {
     maze = new Maze(difficulty, difficulty);
     draw = new DrawMaze(maze, ctx, cellSize, finishSprite);
     player = new Player(maze, mazeCanvas, cellSize, displayVictoryMess, sprite);
+    player.moves = 0; // Explicitly initialize moves
 
+    // Remove or modify this condition
     if (document.getElementById("mazeContainer").style.opacity < "100") {
         document.getElementById("mazeContainer").style.opacity = "100";
     }
@@ -494,6 +576,11 @@ function makeMaze() {
     player.redrawPlayer(cellSize);
 
     console.log('Maze created and buttons set up');
+
+    // Start music if it's not already playing
+    if (!isMusicPlaying) {
+        toggleMusic();
+    }
 }
 
 // Add these new functions
@@ -609,7 +696,8 @@ Player.prototype.moveInDirection = function(direction) {
     console.log(`Player attempting to move ${direction}`);
     let newX = this.cellCoords.x;
     let newY = this.cellCoords.y;
-    let currentCell = maze.map()[this.cellCoords.y][this.cellCoords.x];
+    let currentCell = map[this.cellCoords.y][this.cellCoords.x];
+    const hopSound = document.getElementById('hopSound');
 
     console.log(`Current cell (${this.cellCoords.x},${this.cellCoords.y}):`, currentCell);
 
@@ -636,9 +724,22 @@ Player.prototype.moveInDirection = function(direction) {
     console.log(`Can move ${direction}: ${canMove}`);
     console.log(`Attempted new position: (${newX}, ${newY})`);
 
-    if (canMove && newX >= 0 && newY >= 0 && newX < maze.map()[0].length && newY < maze.map().length) {
+    if (canMove && newX >= 0 && newY >= 0 && newX < map[0].length && newY < map.length) {
+        // Play hop sound when movement is successful
+        hopSound.currentTime = 0;
+        hopSound.play().catch(error => {
+            console.log("Error playing hop sound:", error);
+        });
+        
         this.cellCoords = { x: newX, y: newY };
-        console.log(`Moved to (${this.cellCoords.x}, ${this.cellCoords.y})`);
+        this.moves = (this.moves || 0) + 1; // Ensure moves is initialized
+        console.log('Current moves:', this.moves);
+        
+        // Update score display with fixed score
+        const difficulty = document.getElementById("diffSelect").value;
+        const score = calculateScore(difficulty);
+        updateScoreDisplay(score);
+        
         return true;
     } else {
         console.log(`Cannot move ${direction} (wall or out of bounds)`);
@@ -661,4 +762,76 @@ Player.prototype.draw = function(ctx) {
         cellSize
     );
 };
+
+// Music control
+let currentMusic = 1;
+let isMusicPlaying = false;
+const music1 = document.getElementById('bgMusic1'); // bg1.wav
+const music2 = document.getElementById('bgMusic2'); // bg2.mp3
+const musicToggle = document.getElementById('musicToggle');
+const musicIcon = document.getElementById('musicIcon');
+
+// Function to switch between songs
+function switchMusic() {
+    if (currentMusic === 1) {
+        music1.pause();
+        music1.currentTime = 0;
+        music2.play().catch(error => {
+            console.log("Error playing bg2.mp3:", error);
+        });
+        currentMusic = 2;
+    } else {
+        music2.pause();
+        music2.currentTime = 0;
+        music1.play().catch(error => {
+            console.log("Error playing bg1.wav:", error);
+        });
+        currentMusic = 1;
+    }
+}
+
+// Function to toggle music on/off
+function toggleMusic() {
+    if (isMusicPlaying) {
+        music1.pause();
+        music2.pause();
+        musicIcon.textContent = '🔈';
+    } else {
+        if (currentMusic === 1) {
+            music1.play().catch(error => {
+                console.log("Error playing bg1.wav:", error);
+            });
+        } else {
+            music2.play().catch(error => {
+                console.log("Error playing bg2.mp3:", error);
+            });
+        }
+        musicIcon.textContent = '🔊';
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
+// Add event listeners
+musicToggle.addEventListener('click', toggleMusic);
+
+// Switch music when one song ends
+music1.addEventListener('ended', switchMusic);
+music2.addEventListener('ended', switchMusic);
+
+// Update your output handling function
+function displayOutput(text) {
+    const outputContent = document.getElementById('outputContent');
+    const newOutput = document.createElement('div');
+    newOutput.textContent = text;
+    outputContent.appendChild(newOutput);
+    outputContent.scrollTop = outputContent.scrollHeight; // Auto-scroll to bottom
+}
+
+// Example usage in your command processing function
+function processCommand(command) {
+    // ... your existing command processing logic ...
+    displayOutput(`> ${command}`); // Display the command
+    // Display the result
+    displayOutput(result);
+}
 
