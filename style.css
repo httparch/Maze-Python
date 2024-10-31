@@ -13,6 +13,11 @@ html, body {
     right: 0;
     background-color: #e8f5e9; /* Light green background */
     font-family: 'Poppins', sans-serif;
+    background-image: url('img/bg1.webp');
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    overflow: hidden; /* Prevents scrollbars if the image is larger than the viewport */
 }
 
 #view {
@@ -276,8 +281,6 @@ button:hover {
 
 #musicToggle {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -293,7 +296,26 @@ button:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-#musicToggle:hover {
+#infoToggle {
+    position: fixed;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #154615;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    top: 37px;
+    right: 440px;
+}
+
+#musicToggle:hover, #infoToggle:hover {
     background-color: #1b5e20;
 }
 
@@ -344,5 +366,68 @@ button:hover {
     border-radius: 5px;
     border: 2px solid #2e7d32;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+}
+
+.modal-content {
+    background-color: #81c784; /* Light green background */
+    margin: 0 auto; /* Centered horizontally */
+    padding: 30px; /* Increased padding for more space */
+    border: 2px solid #2e7d32; /* Darker green border */
+    width: 90%; /* Responsive width */
+    max-width: 500px; /* Maximum width */
+    max-height: 90vh; /* Maximum height to fit within the viewport */
+    overflow-y: auto; /* Scroll if content overflows */
+    text-align: left; /* Align text to the left */
+    font-family: 'Press Start 2P', cursive; /* Pixel font */
+    font-size: 12px; /* Adjusted font size */
+    color: #2e7d32; /* Dark green text */
+    position: relative; /* Position relative for internal positioning */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+}
+
+.close {
+    color: #2e7d32; /* Dark green */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #1b5e20; /* Even darker green */
+    text-decoration: none;
+}
+
+.command {
+  color: #8B4513; /* SaddleBrown color */
+  font-weight: bold; /* Optional: make the text bold */
+}
+
+#heartsDisplay {
+  font-family: 'Press Start 2P', cursive; /* Pixel font */
+  font-size: 14px; /* Adjust font size as needed */
+  color: #2e7d32; /* Dark green text */
+  position: absolute; /* Use absolute positioning */
+  top: 10px; /* Adjust top position as needed */
+  right: 20px; /* Move to the right */
+  background-color: rgba(255, 255, 255, 0.9); /* Optional: background for contrast */
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #2e7d32; /* Optional: border for styling */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
 }
 

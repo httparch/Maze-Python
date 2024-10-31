@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Maze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .start-page {
+            background-image: url('img/bg2.jpg');
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .start-page h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: rgb(252, 252, 252); /* Set the color to black */
+            font-family: 'Press Start 2P', cursive; /* Ensure pixel font is applied */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow effect */
+        }
+
+        .player-sprite {
+            width: 100px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .start-button, .how-to-play-button {
+            padding: 15px 30px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 0; /* Set border-radius to 0 for sharp corners */
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .start-button:hover, .how-to-play-button:hover {
+            background-color: #1b5e20;
+        }
+
+        /* How to Play Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+        }
+
+        .modal-content {
+            background-color: #81c784; /* Light green background */
+            margin: 0 auto; /* Centered horizontally */
+            padding: 30px; /* Increased padding for more space */
+            border: 2px solid #2e7d32; /* Darker green border */
+            width: 90%; /* Responsive width */
+            max-width: 500px; /* Maximum width */
+            max-height: 90vh; /* Maximum height to fit within the viewport */
+            overflow-y: auto; /* Scroll if content overflows */
+            text-align: left; /* Align text to the left */
+            font-family: 'Press Start 2P', cursive; /* Pixel font */
+            font-size: 12px; /* Adjusted font size */
+            color: #2e7d32; /* Dark green text */
+            position: relative; /* Position relative for internal positioning */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust for vertical centering */
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px; /* Add space below the heading */
+        }
+
+        .modal-content p {
+            margin-bottom: 15px; /* Add space below paragraphs */
+            line-height: 1.6; /* Increase line height for better readability */
+        }
+
+        .modal-content ul {
+            margin-top: 10px; /* Add space above the list */
+            margin-bottom: 15px; /* Add space below the list */
+            padding-left: 20px; /* Indent list items */
+            line-height: 1.6;
+        }
+
+        .modal-content li {
+            margin-bottom: 10px; /* Add space between list items */
+            line-height: 1.6;
+        }
+
+        .close {
+            color: #2e7d32; /* Dark green */
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: -10px; /* Adjust to align with the top of the modal */
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #1b5e20; /* Even darker green */
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="startPage" class="start-page">
+        <h1>Python Maze</h1> <!-- This is the visible title with a shadow -->
+        <!--<img id="playerSprite" src="key.png" alt="Player Sprite" class="player-sprite">-->
+        <div class="button-container">
+            <button id="startButton" class="start-button">Start</button>
+            <button id="howToPlayButton" class="how-to-play-button">How to Play</button>
+        </div>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('howToPlayModal')">&times;</span>
+            <h2>How to Play</h2>
+            <p>Help the bunny find a way out of the maze using programming commands in the console! But be careful, the bunny only moves when you write correct code using a for loop.<br><br>
+
+                Your objective is to guide the bunny to the maze's exit without losing all hearts.<br>
+                <li>Difficulty Levels: Choose a difficulty (Easy, Medium, Hard). Once selected, click Start to generate a maze matching your chosen difficulty.</li>
+                <li>Hearts: You start with 3 hearts. Every time the bunny hits a wall, you lose a heart. If all hearts are lost, the bunny is sent back to the starting point.</li>
+                <li>Info: Click the info icon to see a list of commands if you need help.</li>
+                <!-- Add more instructions as needed -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', function() {
+            // Redirect to index.html
+            window.location.href = 'index.html';
+        });
+
+        document.getElementById('howToPlayButton').addEventListener('click', function() {
+            // Show the How to Play modal
+            showModal('howToPlayModal');
+        });
+
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>

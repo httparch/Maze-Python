@@ -22,9 +22,10 @@ function displayVictoryMess(moves) {
 
     // Get difficulty and score
     const difficulty = document.getElementById("diffSelect").value;
-    const score = calculateScore(difficulty);
+    const score = calculateScore(difficulty, moves);
     
     // Update victory message
+    // ARCHER ANDITO YUNG POP UP MESSAGE SA VICTORY
     document.getElementById("message").innerHTML = `
         <h1>Congratulations!</h1>
         <p>You've completed the maze!</p>
@@ -32,9 +33,9 @@ function displayVictoryMess(moves) {
         <p>Difficulty: ${getDifficultyName(difficulty)}</p>
         <p>Score: ${score}</p>
         <div class="victory-buttons">
-            <button onclick="makeMaze()" class="play-again-btn">Play Again</button>
-            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button>
-        </div>
+            <button onclick="makeMaze()" class="play-again-btn">Play Again</button> /*ARCHER ITO YUNG PLAY AGAIN BUTTON*/
+            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button> /*ARCHER ITO YUNG CLOSE BUTTON*/
+        </div> 
     `;
     
     // Show message container
@@ -259,157 +260,167 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
 }
 
 function Player(maze, c, _cellsize, onComplete, sprite = null) {
-  var ctx = c.getContext("2d");
-  var drawSprite;
-  var moves = 0;
-  drawSprite = sprite ? drawSpriteImg : drawSpriteCircle;
-  var player = this;
-  var map = maze.map();
-  var cellSize = _cellsize;
-  var halfCellSize = cellSize / 2;
+    var ctx = c.getContext("2d");
+    var drawSprite;
+    var moves = 0;
+    drawSprite = sprite ? drawSpriteImg : drawSpriteCircle;
+    var player = this;
+    var map = maze.map();
+    var cellSize = _cellsize;
+    var halfCellSize = cellSize / 2;
 
-  this.cellCoords = {
-    x: maze.startCoord().x,
-    y: maze.startCoord().y
-  };
+    this.cellCoords = {
+        x: maze.startCoord().x,
+        y: maze.startCoord().y
+    };
 
-  this.moves = 0; // Initialize moves counter
-  this.onComplete = onComplete; // Store the victory callback
+    this.moves = 0; // Initialize moves counter
+    this.hearts = 3; // Initialize hearts
+    this.heartLostThisRun = false; // Flag to track if a heart has been lost this run
 
-  this.redrawPlayer = function (_cellsize) {
-    cellSize = _cellsize;
-    drawSprite(this.cellCoords);
-  };
+    this.redrawPlayer = function (_cellsize) {
+        cellSize = _cellsize;
+        drawSprite(this.cellCoords);
+    };
 
-  function drawSpriteCircle(coord) {
-    ctx.beginPath();
-    ctx.fillStyle = "yellow";
-    ctx.arc(
-      (coord.x + 1) * cellSize - halfCellSize,
-      (coord.y + 1) * cellSize - halfCellSize,
-      halfCellSize - 2,
-      0,
-      2 * Math.PI
-    );
-    ctx.fill();
-  }
-
-  function drawSpriteImg(coord) {
-    if (sprite && sprite.complete) {
-      ctx.drawImage(
-        sprite,
-        0,
-        0,
-        sprite.width,
-        sprite.height,
-        coord.x * cellSize,
-        coord.y * cellSize,
-        cellSize,
-        cellSize
-      );
-    } else {
-      console.log('Sprite not loaded, drawing circle instead');
-      drawSpriteCircle(coord);
-    }
-  }
-
-  // Draw the sprite immediately upon creation
-  drawSprite(this.cellCoords);
-
-  this.draw = function(ctx) {
-    drawSprite(this.cellCoords);
-  };
-
-  this.moveInDirection = function(direction) {
-    console.log(`Player attempting to move ${direction}`);
-    let newX = this.cellCoords.x;
-    let newY = this.cellCoords.y;
-    let currentCell = map[this.cellCoords.y][this.cellCoords.x];
-    const hopSound = document.getElementById('hopSound');
-
-    console.log(`Current cell (${this.cellCoords.x},${this.cellCoords.y}):`, currentCell);
-
-    let canMove = false;
-    switch (direction) {
-        case 'up':
-            canMove = currentCell.n;
-            if (canMove) newY--;
-            break;
-        case 'down':
-            canMove = currentCell.s;
-            if (canMove) newY++;
-            break;
-        case 'left':
-            canMove = currentCell.w;
-            if (canMove) newX--;
-            break;
-        case 'right':
-            canMove = currentCell.e;
-            if (canMove) newX++;
-            break;
+    function drawSpriteCircle(coord) {
+        ctx.beginPath();
+        ctx.fillStyle = "yellow";
+        ctx.arc(
+            (coord.x + 1) * cellSize - halfCellSize,
+            (coord.y + 1) * cellSize - halfCellSize,
+            halfCellSize - 2,
+            0,
+            2 * Math.PI
+        );
+        ctx.fill();
     }
 
-    console.log(`Can move ${direction}: ${canMove}`);
-    console.log(`Attempted new position: (${newX}, ${newY})`);
-
-    if (canMove && newX >= 0 && newY >= 0 && newX < map[0].length && newY < map.length) {
-        // Play hop sound when movement is successful
-        hopSound.currentTime = 0;
-        hopSound.play().catch(error => {
-            console.log("Error playing hop sound:", error);
-        });
-        
-        this.cellCoords = { x: newX, y: newY };
-        this.moves = (this.moves || 0) + 1; // Ensure moves is initialized
-        console.log('Current moves:', this.moves);
-        
-        // Update score display with fixed score
-        const difficulty = document.getElementById("diffSelect").value;
-        const score = calculateScore(difficulty);
-        updateScoreDisplay(score);
-        
-        // Check if player reached the end
-        if (this.cellCoords.x === maze.endCoord().x && this.cellCoords.y === maze.endCoord().y) {
-            console.log('Maze completed!');
-            this.onComplete(this.moves);
+    function drawSpriteImg(coord) {
+        if (sprite && sprite.complete) {
+            ctx.drawImage(
+                sprite,
+                0,
+                0,
+                sprite.width,
+                sprite.height,
+                coord.x * cellSize,
+                coord.y * cellSize,
+                cellSize,
+                cellSize
+            );
+        } else {
+            console.log('Sprite not loaded, drawing circle instead');
+            drawSpriteCircle(coord);
         }
-        
-        return true;
-    } else {
-        console.log(`Cannot move ${direction} (wall or out of bounds)`);
-        return false;
     }
-  };
 
-  this.unbindKeyDown = function() {
-    window.removeEventListener("keydown", check, false);
-  };
+    // Draw the sprite immediately upon creation
+    drawSprite(this.cellCoords);
 
-  this.bindKeyDown = function() {
-    window.addEventListener("keydown", check, false);
-  };
+    this.draw = function() {
+        // Clear the previous position
+        ctx.clearRect(0, 0, c.width, c.height);
+        draw.redrawMaze(cellSize); // Redraw the maze to ensure walls are visible
+        drawSprite(this.cellCoords); // Draw the player at the current position
+    };
 
-  function check(e) {
-    var code = e.keyCode;
-    if (code > 36 && code < 41) {
-      switch (code) {
-        case 37:
-          player.moveInDirection('left');
-          break;
-        case 38:
-          player.moveInDirection('up');
-          break;
-        case 39:
-          player.moveInDirection('right');
-          break;
-        case 40:
-          player.moveInDirection('down');
-          break;
-      }
+    this.moveInDirection = function(direction) {
+        console.log(`Player attempting to move ${direction}`);
+        let newX = this.cellCoords.x;
+        let newY = this.cellCoords.y;
+        let currentCell = map[this.cellCoords.y][this.cellCoords.x];
+        const hopSound = document.getElementById('hopSound');
+
+        console.log(`Current cell (${this.cellCoords.x},${this.cellCoords.y}):`, currentCell);
+
+        let canMove = false;
+        switch (direction) {
+            case 'up':
+                canMove = currentCell.n;
+                if (canMove) newY--;
+                break;
+            case 'down':
+                canMove = currentCell.s;
+                if (canMove) newY++;
+                break;
+            case 'left':
+                canMove = currentCell.w;
+                if (canMove) newX--;
+                break;
+            case 'right':
+                canMove = currentCell.e;
+                if (canMove) newX++;
+                break;
+        }
+
+        console.log(`Can move ${direction}: ${canMove}`);
+        console.log(`Attempted new position: (${newX}, ${newY})`);
+
+        if (canMove && newX >= 0 && newY >= 0 && newX < map[0].length && newY < map.length) {
+            // Play hop sound when movement is successful
+            hopSound.currentTime = 0;
+            hopSound.play().catch(error => {
+                console.log("Error playing hop sound:", error);
+            });
+
+            this.cellCoords = { x: newX, y: newY };
+            this.moves = (this.moves || 0) + 1; // Ensure moves is initialized
+            console.log('Current moves:', this.moves);
+
+            // Redraw player only after a successful move
+            this.draw();
+
+            // Check if player has reached the end
+            if (newX === maze.endCoord().x && newY === maze.endCoord().y) {
+                onComplete(this.moves); // Call the onComplete function with the number of moves
+            }
+
+            return true;
+        } else {
+            console.log(`Cannot move ${direction} (wall or out of bounds)`);
+            if (!this.heartLostThisRun) { // Check if a heart has already been lost this run
+                this.hearts--; // Lose a heart
+                updateHeartsDisplay(this.hearts); // Update the heart display
+                this.heartLostThisRun = true; // Set the flag to true
+                if (this.hearts > 0) {
+                    showModal('wallModal'); // Show the wall bump modal
+                } else {
+                    showModal('resetModal'); // Show the reset modal
+                    this.resetPosition(); // Reset position if no hearts left
+                }
+                console.log(`Hearts remaining: ${this.hearts}`);
+            }
+            return false;
+        }
+    };
+
+    this.unbindKeyDown = function() {
+        window.removeEventListener("keydown", check, false);
+    };
+
+    this.bindKeyDown = function() {
+        window.addEventListener("keydown", check, false);
+    };
+
+    function check(e) {
+        // Prevent any movement by not executing any movement logic
+        console.log("Key pressed, but movement is disabled.");
     }
-  }
 
-  this.bindKeyDown();
+    this.bindKeyDown();
+
+    this.resetPosition = function() {
+        console.log('Resetting player position to start');
+        this.cellCoords = {
+            x: maze.startCoord().x,
+            y: maze.startCoord().y
+        };
+        this.hearts = 3; // Reset hearts to 3
+        updateHeartsDisplay(this.hearts); // Update the heart display
+        console.log('Player position reset and hearts restored');
+        this.draw(); // Redraw player at the start position
+    };
 }
 
 var mazeCanvas = document.getElementById("mazeCanvas");
@@ -423,15 +434,49 @@ var difficulty;
 // Add these variables at the top with your other global variables
 let currentScore = 0;
 const DIFFICULTY_SCORES = {
-    '10': 100,  // Easy: 100 points
-    '15': 250,  // Medium: 250 points
-    '25': 500,  // Hard: 500 points
-    '38': 1000  // Extreme: 1000 points
+    '10': 5,   // Easy: 5 points
+    '15': 10,  // Medium: 10 points
+    '25': 15,  // Hard: 15 points
+    '38': 20   // Extreme: 20 points
 };
 
 // Simplified score calculation
-function calculateScore(difficulty) {
-    return DIFFICULTY_SCORES[difficulty];
+function calculateScore(difficulty, moves) {
+    let baseScore = DIFFICULTY_SCORES[difficulty];
+    let bonus = 0;
+ 
+    switch(difficulty) {
+        case '10': // Easy
+            if (moves < 50) bonus = 5;
+            else if (moves < 60) bonus = 4;
+            else if (moves < 70) bonus = 3;
+            else if (moves < 80) bonus = 2;
+            else if (moves < 90) bonus = 1;
+            break;
+        case '15': // Medium
+            if (moves < 100) bonus = 5;
+            else if (moves < 120) bonus = 4;
+            else if (moves < 140) bonus = 3;
+            else if (moves < 160) bonus = 2;
+            else if (moves < 180) bonus = 1;
+            break;
+        case '25': // Hard
+            if (moves < 150) bonus = 5;
+            else if (moves < 180) bonus = 4;
+            else if (moves < 210) bonus = 3;
+            else if (moves < 240) bonus = 2;
+            else if (moves < 270) bonus = 1;
+            break;
+        case '38': // Extreme
+            if (moves < 200) bonus = 5;
+            else if (moves < 240) bonus = 4;
+            else if (moves < 280) bonus = 3;
+            else if (moves < 320) bonus = 2;
+            else if (moves < 360) bonus = 1;
+            break;
+    }
+ 
+    return baseScore + bonus;
 }
 
 // Update the score display function with verification
@@ -607,47 +652,98 @@ function getTerminalCommands(terminal) {
 }
 
 function executeCommands(commands, output) {
+    player.heartLostThisRun = false; // Reset the flag at the start of command execution
     let i = 0;
     while (i < commands.length) {
         let command = commands[i].trim().toLowerCase();
-        if (command.startsWith('for')) {
-            let [_, count, ...loopCommands] = command.split(' ');
-            count = parseInt(count);
-            let endIndex = commands.indexOf('end', i);
-            if (endIndex === -1) {
-                appendToOutput(output, "Error: 'for' loop without 'end'");
-                break;
+        
+        // Check for the new loop syntax
+        if (command.startsWith('for') && command.includes('in range')) {
+            const match = command.match(/for\s+\w+\s+in\s+range\((\d+)\):/);
+            if (match) {
+                const count = parseInt(match[1]);
+                let endIndex = commands.indexOf('end', i);
+                if (endIndex === -1) {
+                    appendToOutput(output, "Error: 'for' loop without 'end'");
+                    showModal('errorModal'); // Show modal for missing 'end'
+                    break;
+                }
+                
+                // Collect commands within the loop
+                const loopCommands = [];
+                for (let j = i + 1; j < endIndex; j++) {
+                    const loopCommand = commands[j].trim().toLowerCase();
+                    const actionMatch = loopCommand.match(/(\w+_\w+)\(\)/);
+                    if (actionMatch) {
+                        loopCommands.push(actionMatch[1]);
+                    }
+                }
+ 
+                // Check for duplicate commands
+                const uniqueCommands = new Set(loopCommands);
+                if (uniqueCommands.size !== loopCommands.length) {
+                    appendToOutput(output, "Error: Duplicate commands found in loop");
+                    showModal('errorModal'); // Show modal for duplicate commands
+                    break;
+                }
+ 
+                // Execute each unique command the specified number of times
+                for (let j = 0; j < count; j++) {
+                    uniqueCommands.forEach(action => {
+                        executeSingleCommand(`${action}()`, output, true);
+                    });
+                }
+                i = endIndex + 1;
+            } else {
+                appendToOutput(output, "Error: Invalid 'for' loop syntax");
+                showModal('errorModal'); // Show modal for invalid syntax
+                i++;
             }
-            for (let j = 0; j < count; j++) {
-                executeCommands(commands.slice(i + 1, endIndex), output);
-            }
-            i = endIndex + 1;
         } else if (command === 'end') {
             appendToOutput(output, "Error: 'end' without matching loop");
+            showModal('errorModal'); // Show modal for unmatched 'end'
             i++;
         } else {
-            executeSingleCommand(command, output);
+            appendToOutput(output, "Error: Command outside of loop");
+            showModal('errorModal'); // Show modal for command outside loop
             i++;
         }
     }
     updateMaze();
 }
 
-function executeSingleCommand(command, output) {
+function executeSingleCommand(command, output, allowMovement) {
     appendToOutput(output, `> ${command}`);
-    const [direction, steps] = command.split(' ');
-    const numSteps = parseInt(steps) || 1;
-
-    if (['up', 'down', 'left', 'right'].includes(direction)) {
-        for (let i = 0; i < numSteps; i++) {
-            console.log(`Attempting step ${i + 1} of ${numSteps}`);
-            if (player.moveInDirection(direction)) {
-                appendToOutput(output, `Moved ${direction} 1 step`);
-            } else {
-                appendToOutput(output, `Cannot move ${direction} (wall or out of bounds)`);
-                console.log(`Movement failed at step ${i + 1}`);
-                break;
+    
+    // Extract the action from the command
+    const actionMatch = command.match(/(\w+_\w+)\(\)/);
+    if (actionMatch) {
+        const action = actionMatch[1];
+        if (allowMovement) {
+            let moveSuccessful = false;
+            switch (action) {
+                case 'move_up':
+                    moveSuccessful = player.moveInDirection('up');
+                    break;
+                case 'move_down':
+                    moveSuccessful = player.moveInDirection('down');
+                    break;
+                case 'move_left':
+                    moveSuccessful = player.moveInDirection('left');
+                    break;
+                case 'move_right':
+                    moveSuccessful = player.moveInDirection('right');
+                    break;
+                default:
+                    appendToOutput(output, `Invalid command: ${command}`);
             }
+            if (moveSuccessful) {
+                appendToOutput(output, `Moved ${action.replace('move_', '')}`);
+            } else {
+                appendToOutput(output, `Cannot move ${action.replace('move_', '')} (wall or out of bounds)`);
+            }
+        } else {
+            appendToOutput(output, `Movement commands are only allowed within a 'for' loop`);
         }
     } else {
         appendToOutput(output, `Invalid command: ${command}`);
@@ -735,14 +831,18 @@ Player.prototype.moveInDirection = function(direction) {
         this.moves = (this.moves || 0) + 1; // Ensure moves is initialized
         console.log('Current moves:', this.moves);
         
-        // Update score display with fixed score
-        const difficulty = document.getElementById("diffSelect").value;
-        const score = calculateScore(difficulty);
-        updateScoreDisplay(score);
-        
         return true;
     } else {
         console.log(`Cannot move ${direction} (wall or out of bounds)`);
+        this.hearts--; // Lose a heart
+        updateHeartsDisplay(this.hearts); // Update the heart display
+        if (this.hearts > 0) {
+            showModal('wallModal'); // Show the wall bump modal
+        } else {
+            showModal('resetModal'); // Show the reset modal
+            this.resetPosition(); // Reset position if no hearts left
+        }
+        console.log(`Hearts remaining: ${this.hearts}`);
         return false;
     }
 };
@@ -834,4 +934,33 @@ function processCommand(command) {
     // Display the result
     displayOutput(result);
 }
+
+function updateHeartsDisplay(hearts) {
+    const heartsDisplay = document.getElementById('heartsDisplay');
+    heartsDisplay.textContent = `Hearts: ${'❤️'.repeat(hearts)}`;
+}
+
+// Call this function whenever hearts change
+Player.prototype.moveInDirection = function(direction) {
+    // ... existing code ...
+    if (!canMove) {
+        this.hearts--;
+        updateHeartsDisplay(this.hearts);
+        // ... rest of the code ...
+    }
+};
+
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "block";
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = "none";
+}
+
+document.getElementById('infoToggle').addEventListener('click', function() {
+    showModal('infoModal');
+});
 

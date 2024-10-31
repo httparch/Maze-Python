@@ -24,13 +24,14 @@
     <div id="menu">
       <div class="custom-select">
         <select id="diffSelect">
-          <option value="10">Easy</option>
-          <option value="15">Medium</option>
-          <option value="25">Hard</option>
-          <option value="38">Extreme</option>                                      
+          <option value="10">Easy ></option>
+          <option value="15">Medium ></option>
+          <option value="25">Hard ></option>
+          <!--<option value="38">Extreme ></option>                                      -->
         </select>
       </div>
       <input id="startMazeBtn" type="button" onclick="makeMaze()" value="Start" />
+      <button id="infoToggle"><span id="infoIcon">ℹ️</span></button>
     </div>
 
     <div id="view">
@@ -71,6 +72,57 @@
   <audio id="hopSound">
     <source src="sound/hop.wav" type="audio/wav">
   </audio>
+
+  <div id="heartsDisplay">Hearts: ❤️❤️❤️</div>
+
+  <div id="wallModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('wallModal')">&times;</span>
+      <p>Oops! <br> <br> Looks like you bumped into a wall. <br><br> You need to be careful or your health will decrease.</p>
+    </div>
+  </div>
+
+  <div id="resetModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('resetModal')">&times;</span>
+      <p>Sorry! <br> <br> You've lost all your hearts. <br> <br> You'll be sent back to the start. <br> <br> Be more careful next time!</p>
+    </div>
+  </div>
+
+
+  <!-- Info Modal -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('infoModal')">&times;</span>
+      <h2>Available Commands</h2>
+      <p>You can use the following commands to move the bunny around the maze.</p>
+      <p style="color: black; line-height: 1.6;">
+         for i in range(n):<br>
+         function()<br>
+         end<br><br>
+
+         <i><span class="command">range(n)</span> - represents the number of times you want the bunny to move.</i><br>
+         <i><span class="command">function()</span> - is the command you want the bunny to execute.</i><br>
+         <i><span class="command">end</span> - is used to signify the end of the loop.</i>
+      <br>
+      <ul><br>
+        Functions you can use:<br><br>
+        <li><span class="command">move_up()</span> - Move the player up</li><br>
+        <li><span class="command">move_down()</span> - Move the player down</li><br>
+        <li><span class="command">move_left()</span> - Move the player left</li><br>
+        <li><span class="command">move_right()</span> - Move the player right</li><br>
+        <!-- Add more commands as needed -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('errorModal')">&times;</span>
+      <p>There is an error in your command syntax. Please ensure your commands follow the correct template.</p>
+    </div>
+  </div>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
