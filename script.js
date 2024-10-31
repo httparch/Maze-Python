@@ -26,6 +26,14 @@ function displayVictoryMess(moves) {
     
     // Update victory message
     // ARCHER ANDITO YUNG POP UP MESSAGE SA VICTORY
+
+    window.parent.postMessage({
+        type: "maze-points",
+        maze_data:{
+            maze_points: score,
+        }
+    } , "*")
+
     document.getElementById("message").innerHTML = `
         <h1>Congratulations!</h1>
         <p>You've completed the maze!</p>
