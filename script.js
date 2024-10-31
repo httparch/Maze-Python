@@ -30,7 +30,7 @@ function displayVictoryMess(moves) {
     window.parent.postMessage({
         type: "maze-points",
         maze_data:{
-            maze_points: score,
+            points: score,
         }
     } , "*")
 
