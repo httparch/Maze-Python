@@ -312,7 +312,7 @@ button:hover {
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     top: 37px;
-    right: 440px;
+    right: 430px;
 }
 
 #musicToggle:hover, #infoToggle:hover {
@@ -429,5 +429,10 @@ button:hover {
   border-radius: 5px;
   border: 2px solid #2e7d32; /* Optional: border for styling */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
+}
+
+.modal-content p {
+    line-height: 1.6; /* Adjust the line height for better readability */
+    margin-bottom: 15px; /* Optional: Add space below the paragraph */
 }
 
