@@ -26,14 +26,7 @@ function displayVictoryMess(moves) {
     
     // Update victory message
     // ARCHER ANDITO YUNG POP UP MESSAGE SA VICTORY
-
-    window.parent.postMessage({
-        type: "maze-points",
-        maze_data:{
-            points: score,
-        }
-    } , "*")
-
+    window.parent.postMessage({ type: "maze-points", maze_data:{ points: score, } } , "*")
     document.getElementById("message").innerHTML = `
         <h1>Congratulations!</h1>
         <p>You've completed the maze!</p>
@@ -41,8 +34,8 @@ function displayVictoryMess(moves) {
         <p>Difficulty: ${getDifficultyName(difficulty)}</p>
         <p>Score: ${score}</p>
         <div class="victory-buttons">
-            <button onclick="makeMaze()" class="play-again-btn">Play Again</button> 
-            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button>
+            <button onclick="makeMaze()" class="play-again-btn">Play Again</button> /*ARCHER ITO YUNG PLAY AGAIN BUTTON*/
+            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button> /*ARCHER ITO YUNG CLOSE BUTTON*/
         </div> 
     `;
     
@@ -617,7 +610,8 @@ function makeMaze() {
     maze = new Maze(difficulty, difficulty);
     draw = new DrawMaze(maze, ctx, cellSize, finishSprite);
     player = new Player(maze, mazeCanvas, cellSize, displayVictoryMess, sprite);
-  
+    
+    // Reset player state
     player.moves = 0;
     player.hearts = 3;
     player.heartLostThisRun = false;
@@ -632,7 +626,7 @@ function makeMaze() {
     draw.redrawMaze(cellSize);
     player.redrawPlayer(cellSize);
 
-    console.log('Maze created and buttons set up');
+    console.log('Maze created, hearts reset to 3, and buttons set up');
 
     // Start music if it's not already playing
     if (!isMusicPlaying) {
@@ -975,4 +969,3 @@ function closeModal(modalId) {
 document.getElementById('infoToggle').addEventListener('click', function() {
     showModal('infoModal');
 });
-
