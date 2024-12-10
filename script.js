@@ -34,8 +34,8 @@ function displayVictoryMess(moves) {
         <p>Difficulty: ${getDifficultyName(difficulty)}</p>
         <p>Score: ${score}</p>
         <div class="victory-buttons">
-            <button onclick="makeMaze()" class="play-again-btn">Play Again</button> /*ARCHER ITO YUNG PLAY AGAIN BUTTON*/
-            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button> /*ARCHER ITO YUNG CLOSE BUTTON*/
+            <button onclick="makeMaze()" class="play-again-btn">Play Again</button>
+            <button onclick="toggleVisibility('Message-Container')" class="close-btn">Close</button> 
         </div> 
     `;
     
